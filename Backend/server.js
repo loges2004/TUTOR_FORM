@@ -49,7 +49,7 @@ const sendMail = async (to, subject, text) => {
 
 // Register route
 app.post('/register', async (req, res) => {
-    const { firstname, lastname, email, password } = req.body;
+    const { firstname, lastname, email, password, selectusertype } = req.body;
 
     try {
         db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
@@ -64,8 +64,8 @@ app.post('/register', async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             const emailVerificationToken = crypto.randomBytes(32).toString('hex');
             
-            db.query('INSERT INTO unverified_users (firstname, lastname, email, password, emailVerificationToken) VALUES (?, ?, ?, ?, ?)', 
-                [firstname, lastname, email, hashedPassword, emailVerificationToken], 
+            db.query('INSERT INTO unverified_users (firstname, lastname, email, password, emailVerificationToken, selectusertype) VALUES (?, ?, ?, ?, ?, ?)', 
+                [firstname, lastname, email, hashedPassword, emailVerificationToken, selectusertype], 
                 async (err) => {
                     if (err) {
                         console.error('Error inserting into unverified_users:', err.message);
@@ -95,8 +95,8 @@ app.get('/verify-email/:token', (req, res) => {
         }
         
         const user = results[0];
-        db.query('INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)',
-            [user.firstname, user.lastname, user.email, user.password],
+        db.query('INSERT INTO users (firstname, lastname, email, password, selectusertype) VALUES (?, ?, ?, ?, ?)',
+            [user.firstname, user.lastname, user.email, user.password, user.selectusertype],
             (err) => {
                 if (err) {
                     console.error('Error inserting into users:', err.message);
@@ -108,26 +108,32 @@ app.get('/verify-email/:token', (req, res) => {
         );
     });
 });
-
 // Login route
 app.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    
+    const { email, password, selectusertype } = req.body;
+
     db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
         if (err || results.length === 0) {
             console.error('Login error:', err?.message);
             return res.status(401).json({ message: 'Invalid email or password.' });
         }
-        
+
         const user = results[0];
+
+        // Validate password
         if (!(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ message: 'Invalid email or password.' });
         }
-        
-        res.status(200).json({ message: 'Login successful!' });
+
+        // Validate user type
+        if (user.selectusertype !== selectusertype) {
+            return res.status(401).json({ message: `You are not authorized to login as ${selectusertype}.` });
+        }
+
+        // Login successful
+        res.status(200).json({ message: 'Login successful!', user });
     });
 });
-
 // Forgot password route
 app.post('/forgot-password', (req, res) => {
     const { email } = req.body;
