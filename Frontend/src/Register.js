@@ -11,7 +11,8 @@ const Register = () => {
         lastname: '',
         email: '',
         password: '',
-        confirm_password: ''
+        confirm_password: '',
+        selectusertype: ''
     });
 
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -77,25 +78,23 @@ const Register = () => {
         return true;
     };
 
-    //http://localhost:5000/register
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Validate email domain
-    const collegeEmailPattern = /^[a-zA-Z0-9._%+-]+@psnacet\.edu\.in$/;
-    if (!collegeEmailPattern.test(formData.email)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Email',
-            text: 'Please use your college email (@psnacet.edu.in) to register.',
-            showConfirmButton: true,
-        });
-        return;
-    }
+        const collegeEmailPattern = /^[a-zA-Z0-9._%+-]+@psnacet\.edu\.in$/;
+        if (!collegeEmailPattern.test(formData.email)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Email',
+                text: 'Please use your college email (@psnacet.edu.in) to register.',
+                showConfirmButton: true,
+            });
+            return;
+        }
 
-    // Validate password match
-    if (!validatePassword()) return; 
+        // Validate password match
+        if (!validatePassword()) return; 
         try {
             const response = await axios.post("http://localhost:5000/register", formData);
 
@@ -119,6 +118,24 @@ const Register = () => {
                 <form onSubmit={handleSubmit}>
                     <h1 className="container text-center fs-3">Create Account</h1>
                     <hr />
+                    <div className="input-group mb-3">
+                        <span className="input-group-text"><i className="bi bi-check2-circle"></i></span>
+                        <div className="form-floating">
+                            <select
+                                className="form-select"
+                                id="userType"
+                                name="selectusertype"
+                                value={formData.selectusertype}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">--Select Role--</option>
+                                <option value="tutor">👨‍💼 tutor</option>
+                                <option value="student">🎓 Student</option>
+                            </select>
+                            <label htmlFor="userType">Select User Type</label>
+                        </div>
+                    </div>
                     <div className="row">
                         <div className="col-md-6">
                             <div className="input-group mb-3">
@@ -148,7 +165,6 @@ const Register = () => {
                                         placeholder="Enter your lastname"
                                         value={formData.lastname}
                                         onChange={handleChange}
-                            
                                     />
                                     <label htmlFor="lastname">Last Name</label>
                                 </div>
@@ -222,6 +238,7 @@ const Register = () => {
                             <label htmlFor="confirm_password">Confirm Password</label>
                         </div>
                     </div>
+                    
                     <input
                         type="submit"
                         className="btn btn-primary mt-3"
