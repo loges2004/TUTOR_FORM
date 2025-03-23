@@ -1,0 +1,136 @@
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.input-group .btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.form-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+#showPassword {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 1;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#showPassword:hover {
+    background-color: black;
+}
+
+.center h1 {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+img {
+    display: inline-block;
+    margin: auto;
+}
+
+input[type="submit"] {
+    height: 40px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #3ca9f2;
+    color: #ffffff;
+}
+
+input[type="submit"]:hover {
+    background-color: #2c85d8;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.center input[type="button"],
+.center input[type="reset"] {
+    width: auto;
+    height: auto;
+    font-size: 14px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: #0288d1;
+    color: white;
+}
+
+/* For larger screens like laptops and desktops */
+@media (min-width: 768px) {
+    .password-container {
+        position: relative;
+    }
+
+    .password-requirements {
+        position: absolute;
+        left: -250px; /* Adjust based on your layout */
+        top: 10px;
+        width: 200px;
+    }
+}
+
+/* For smaller screens like mobile devices */
+@media (max-width: 767px) {
+    .password-container {
+        position: relative;
+    }
+
+    .password-requirements {
+        position: relative;
+        width: 100%;
+        margin-top: 10px; /* Space between password field and requirements */
+        display: block;
+    }
+}
+
+.password-requirements {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    display: none;
+}
+
+.password-requirements.visible {
+    display: block;
+}
+
+.password-requirements ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.password-requirements li {
+    margin: 5px 0;
+}
+
+.password-requirements .valid {
+    color: green;
+}
+
+.password-requirements .invalid {
+    color: red;
+}
