@@ -94,7 +94,7 @@ const Login = () => {
                                 required
                             >
                                 <option value="">--Select User Type--</option>
-                                <option value="tutor">👨‍💼 tutor</option>
+                                <option value="tutor">👨‍💼 Tutor</option>
                                 <option value="student">🎓 Student</option>
                             </select>
                             <label htmlFor="selectusertype">User Type</label>
